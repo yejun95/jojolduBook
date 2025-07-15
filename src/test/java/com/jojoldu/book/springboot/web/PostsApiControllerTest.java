@@ -2,7 +2,9 @@ package com.jojoldu.book.springboot.web;
 
 import com.jojoldu.book.springboot.domain.posts.Posts;
 import com.jojoldu.book.springboot.domain.posts.PostsRepository;
+import com.jojoldu.book.springboot.service.posts.PostsService;
 import com.jojoldu.book.springboot.web.dto.PostsSaveRequestDto;
+import com.jojoldu.book.springboot.web.dto.PostsUpdateRequestDto;
 import junit.framework.TestCase;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
@@ -12,10 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.xml.ws.Response;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +38,8 @@ public class PostsApiControllerTest extends TestCase {
 
     @Autowired
     private PostsRepository postsRepository;
+    @Autowired
+    private PostsService postsService;
 
     @After
     public void tearDown() {
@@ -40,7 +47,7 @@ public class PostsApiControllerTest extends TestCase {
     }
 
     @Test
-    public void Posts_등록된다() {
+    public void Posts_등록된다() throws Exception {
         String title = "title";
         String content = "content";
         PostsSaveRequestDto requestDto = PostsSaveRequestDto.builder()
@@ -59,5 +66,37 @@ public class PostsApiControllerTest extends TestCase {
         List<Posts> all = postsRepository.findAll();
         assertThat(all.get(0).getTitle()).isEqualTo(title);
         assertThat(all.get(0).getContent()).isEqualTo(content);
+    }
+
+    @Test
+    public void Posts_수정된다() {
+        Posts savedPosts = postsRepository.save(Posts.builder()
+                .title("title")
+                .content("content")
+                .author("author")
+                .build());
+
+        Long updateId = savedPosts.getId();
+        String expectedTitle = "title2";
+        String expectedContent = "content2";
+
+        PostsUpdateRequestDto requestDto = PostsUpdateRequestDto.builder()
+                .title(expectedTitle)
+                .content(expectedContent)
+                .build();
+
+        String url = "http://localhost:" + port + "/api/v1/posts/" + updateId;
+
+        // HttpEntity : Http 요청을 보낼 때, 요청 본문(Body) + 헤더 등을 담는 컨테이너 역할
+        HttpEntity<PostsUpdateRequestDto> requestEntity = new HttpEntity<>(requestDto);
+
+        ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Long.class);
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isGreaterThan(0L);
+
+        List<Posts> all = postsRepository.findAll();
+        assertThat(all.get(0).getTitle()).isEqualTo(expectedTitle);
+        assertThat(all.get(0).getContent()).isEqualTo(expectedContent);
     }
 }
