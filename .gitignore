@@ -8,3 +8,5 @@ application-real-oauth.properties
 
 build
 out
+
+src/main/resources/application-oauth.properties
