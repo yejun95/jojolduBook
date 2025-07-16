@@ -18,7 +18,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     private final HttpSession httpSession;
 
     /*
-    값 주입이 목적 → HandlerMethodArgumentResolver 필요
+    어노테이션이 붙은 파라미터에 실제 User 객체를 주입하려면 → HandlerMethodArgumentResolver 필요 (ex: @LoginUser SessionUser user)
     단순 마킹/검증/AOP → HandlerMethodArgumentResolver 불필요
      */
 
