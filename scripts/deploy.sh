@@ -37,7 +37,7 @@ nohup java -jar \
 classpath:/application.properties,\
 classpath:/application-real.properties,\
 /home/ec2-user/app/application-aouth.properties,\
-/home/ec2-user/app/application-real-db.properties \`
+/home/ec2-user/app/application-real-db.properties \
   -Dspring.profiles.active=real \
   $JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
 # CodeDeploy는 배포 스크립트에서 실행한 프로세스가 종료되어야 다음 단계로 넘어감
