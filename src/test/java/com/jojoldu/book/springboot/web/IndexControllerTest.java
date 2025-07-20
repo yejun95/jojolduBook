@@ -22,7 +22,7 @@ public class IndexControllerTest extends TestCase {
     public void 메인페이지_로딩() {
         String body = this.restTemplate.getForObject("/", String.class);
 
-        assertThat(body).contains("스프링부트로 시작하는 웹 서비스 Ver.2");
+        assertThat(body).contains("스프링부트로 시작하는 웹 서비스");
     }
 
 }
