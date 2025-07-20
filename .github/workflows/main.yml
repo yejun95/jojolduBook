@@ -9,7 +9,7 @@ on:
 # AWS 관련 값 변수로 설정
 env:
   AWS_S3_BUCKET: freelec-springboot-github-build
-  AWS_CODE_DEPLOY_APPLICATION: freelec-springboot2-werbservice
+  AWS_CODE_DEPLOY_APPLICATION: freelec-springboot2-webservice
   AWS_CODE_DEPLOY_GROUP: freelec-springboot2-webservice-group
 
 jobs:
@@ -47,6 +47,7 @@ jobs:
       run: zip -r ./$GITHUB_SHA.zip .
       shell: bash
 
+    # AWS 권한 확인
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
@@ -59,7 +60,7 @@ jobs:
       run: aws s3 cp --region ${{ secrets.AWS_REGION }} ./$GITHUB_SHA.zip s3://$AWS_S3_BUCKET/$GITHUB_SHA.zip
 
     # EC2 인스턴스에 S3에 저장되어 있던 zip 파일을 받아와 배포 시작
-    - name: EC2에 배포
+    - name: Code Deploy
       run: aws deploy create-deployment 
           --application-name ${{ env.AWS_CODE_DEPLOY_APPLICATION }} 
           --deployment-config-name CodeDeployDefault.AllAtOnce 
