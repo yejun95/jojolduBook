@@ -21,3 +21,5 @@ else
   kill -15 ${IDLE_PID}
   sellp 5
 fi
+
+# 해당 파일은 Nginx와 연결되어 있지 않은 포트가 실행되고 있을 수도 있으니 강제 종료 하는 것
