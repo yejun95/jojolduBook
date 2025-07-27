@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
 
 ABSPATH=$(readlink -f $0)
-
-# 현재 switch.sh가 속해있는 경로를 찾는다.
 ABSDIR=$(dirname $ABSPATH)
-
-# 일종의 import, 해당 코드로 인해 switch.sh에서 profile.sh의 여러 function 사용 가능
 source ${ABSDIR}/profile.sh
 
 function switch_proxy() {
